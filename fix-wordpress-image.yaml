@@ -1,0 +1,11 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress-stack-wordpress
+spec:
+  template:
+    spec:
+      containers:
+      - name: wordpress
+        image: my-wordpress:1.0
+        imagePullPolicy: IfNotPresent

@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress-stack-mysql
+spec:
+  template:
+    spec:
+      containers:
+      - name: mysql
+        image: my-mysql:1.0
+        imagePullPolicy: IfNotPresent
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress-stack-wordpress
+spec:
+  template:
+    spec:
+      containers:
+      - name: wordpress
+        image: my-wordpress:1.0
+        imagePullPolicy: IfNotPresent

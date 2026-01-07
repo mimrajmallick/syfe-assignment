@@ -1,0 +1,5 @@
+apiVersion: v2
+name: wordpress-stack
+description: WordPress with MySQL and Nginx
+version: 0.1.0
+appVersion: "1.0"

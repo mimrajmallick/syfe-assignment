@@ -1,0 +1,13 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: nginx-monitor
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: wordpress-stack-nginx
+  endpoints:
+  - port: http
+    interval: 30s
+    path: /nginx_status

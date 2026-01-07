@@ -1,0 +1,35 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: wordpress-alerts
+  namespace: default
+spec:
+  groups:
+  - name: wordpress.rules
+    rules:
+    - alert: HighPodCPU
+      expr: (sum(rate(container_cpu_usage_seconds_total{container="wordpress"}[5m])) by (pod) / (sum(container_spec_cpu_quota{container="wordpress"} / 100000) by (pod))) * 100 > 80
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "High CPU usage on WordPress pod {{ $labels.pod }}"
+        description: "Pod {{ $labels.pod }} is using {{ $value }}% CPU"
+
+    - alert: Nginx5xxErrors
+      expr: rate(nginx_ingress_controller_requests{status=~"5.."}[5m]) > 0.1
+      for: 2m
+      labels:
+        severity: critical
+      annotations:
+        summary: "High 5xx error rate on Nginx"
+        description: "5xx error rate is {{ $value }} per second"
+
+    - alert: PodDown
+      expr: kube_pod_status_phase{phase="Running"} == 0
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        summary: "Pod {{ $labels.pod }} is down"
+        description: "Pod {{ $labels.pod }} has been down for more than 5 minutes"

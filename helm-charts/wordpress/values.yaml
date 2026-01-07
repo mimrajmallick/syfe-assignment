@@ -1,0 +1,32 @@
+wordpress:
+  image:
+    repository: yourusername/my-wordpress  # CHANGE THIS
+    tag: "1.0"
+  replicaCount: 2
+  service:
+    port: 80
+  persistence:
+    enabled: true
+    size: 10Gi
+
+mysql:
+  image:
+    repository: yourusername/my-mysql  # CHANGE THIS
+    tag: "1.0"
+  rootPassword: "rootpassword"
+  database: "wordpress"
+  user: "wordpress"
+  password: "wordpress123"
+  persistence:
+    enabled: true
+    size: 10Gi
+
+nginx:
+  image:
+    repository: yourusername/my-nginx  # CHANGE THIS
+    tag: "1.0"
+  replicaCount: 2
+  service:
+    type: NodePort
+    port: 80
+    nodePort: 30080

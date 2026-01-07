@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}-wordpress
+spec:
+  replicas: {{ .Values.wordpress.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}-wordpress
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}-wordpress
+    spec:
+      containers:
+      - name: wordpress
+        image: "{{ .Values.wordpress.image.repository }}:{{ .Values.wordpress.image.tag }}"
+        ports:
+        - containerPort: 80
+        env:
+        - name: WORDPRESS_DB_HOST
+          value: {{ .Chart.Name }}-mysql-service:3306
+        - name: WORDPRESS_DB_USER
+          value: {{ .Values.mysql.user | quote }}
+        - name: WORDPRESS_DB_PASSWORD
+          value: {{ .Values.mysql.password | quote }}
+        - name: WORDPRESS_DB_NAME
+          value: {{ .Values.mysql.database | quote }}
+        volumeMounts:
+        - name: wp-storage
+          mountPath: /var/www/html
+      volumes:
+      - name: wp-storage
+        persistentVolumeClaim:
+          claimName: {{ .Chart.Name }}-wp-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Chart.Name }}-wordpress-service
+spec:
+  selector:
+    app: {{ .Chart.Name }}-wordpress
+  ports:
+    - port: {{ .Values.wordpress.service.port }}
+      targetPort: 80
+  type: ClusterIP

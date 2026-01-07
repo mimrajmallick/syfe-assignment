@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress-stack-nginx
+  labels:
+    app: wordpress-stack-nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wordpress-stack-nginx
+  template:
+    metadata:
+      labels:
+        app: wordpress-stack-nginx
+    spec:
+      containers:
+      - name: nginx
+        image: my-nginx:1.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 5
