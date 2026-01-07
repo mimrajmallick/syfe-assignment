@@ -274,4 +274,3 @@ Email: mimrajmallick79@gmail.com
 
 For any questions or assistance with this deployment, feel free to reach out! 
 
-[def]: screenshots/wordpress-install-2.png. why this is not push to github
